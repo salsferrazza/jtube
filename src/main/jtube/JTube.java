@@ -13,14 +13,38 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.services.bigquery.Bigquery.Datasets;
 
 public class JTube {
+	
+	private GoogleCredential credential;
+	private BigQuery bigQuery;
+	
+	public JTube(String serviceAccountId, String pathToP12File) {
+		try {
+			this.credential = new GoogleCredential.Builder().setTransport(TRANSPORT)
+				.setJsonFactory(JSON_FACTORY)
+				.setServiceAccountId(serviceAccountId)
+				.setServiceAccountScopes(SCOPE)
+				.setServiceAccountPrivateKeyFromP12File(new File(pathToP12File).build()));
+				
+			this.bigQuery =	new Bigquery.Builder(TRANSPORT, JSON_FACTORY, credential)
+				 	.setApplicationName("JTube")
+				 	.setHttpRequestInitializer(this.credential).build();
 
-	public static List<TableDataInsertAllRequest.Rows> stream(Object o) throws Exception {
+		} catch (Exception ex) {
+			System.err.println("JTube: error encountered in constructor was \"" + ex.getMessage() = "\"");
+			ex.printStackTrace();
+			throw(ex);
+		}
+		
+	}
+
+	public Object stream(Object o) throws Exception {
         
 		try {
-
+			
+			Class persistable = Class.forName(o.getClass().getName());
+			String destination = persistable.getSimpleName().toUpperCase();
+			Field[] fields = persistable.getFields();
 			TableRow row = new TableRow();
-			Class thisClass = Class.forName(o.getClass().getName());
-			Field[] fields = thisClass.getFields();
 
 			for (Field f: fields) {
 
@@ -54,10 +78,13 @@ public class JTube {
 			List<TableDataInsertAllRequest.Rows> rowList = new ArrayList<TableDataInsertAllRequest.Rows>();
 			rowList.add(rows);
 
-			return rowList;
-        
+			TableDataInsertAllRequest content = new TableDataInsertAllRequest().setRows(rowList);
+			TableDataInsertAllResponse response = this.bigQuery.tabledata().insertAll(GCE_PROJECT_ID, GCE_DATASET, tableName, content).execute();        
+		
+			return o; // back at you for fluency
+			
 		} catch (Exception ex) {
-			System.err.println("Exception caught streaming object: " + ex.getMessage());
+			System.err.println("Exception streaming " + o.toString() + " to BigQuery table " + destination + ": " + ex.getMessage());			
 			ex.printStackTrace();
 			throw(ex);
 		}
