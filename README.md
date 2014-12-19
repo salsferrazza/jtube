@@ -26,7 +26,7 @@ try {
 }
 ```
 
-JTube finds your BigQuery table named Person and using BQ's streaming interface will insert a record into the firstName and lastName columns with the value of the corresponding POJO member properties.
+JTube finds your BigQuery table named PERSON and using BQ's streaming interface will insert a record into the firstName and lastName columns with the value of the corresponding POJO member properties.
 
 **Roadmap**
 
