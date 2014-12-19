@@ -1,7 +1,8 @@
 jtube
 =====
 
-Transparently stream POJOs to Google BigQuery.
+Stream Java POJOs into Google BigQuery.
+
 ```
 class Person {
   
