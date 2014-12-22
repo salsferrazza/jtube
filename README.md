@@ -32,3 +32,7 @@ JTube finds your BigQuery table named PERSON and using BQ's streaming interface 
 **Roadmap**
 
 - Add support for schema mapping as an auxiliary parameter to stream()
+
+**Dependencies**
+
+Google BigQuery API for Java: https://developers.google.com/resources/api-libraries/download/bigquery/v2/java
