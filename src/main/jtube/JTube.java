@@ -23,7 +23,7 @@ public class JTube {
 				.setJsonFactory(JSON_FACTORY)
 				.setServiceAccountId(serviceAccountId)
 				.setServiceAccountScopes(SCOPE)
-				.setServiceAccountPrivateKeyFromP12File(new File(pathToP12File).build()));
+				.setServiceAccountPrivateKeyFromP12File(new File(pathToP12File)).build();
 				
 			this.bigQuery =	new Bigquery.Builder(TRANSPORT, JSON_FACTORY, credential)
 				 	.setApplicationName("JTube")
